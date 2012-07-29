@@ -15,17 +15,10 @@ This requires the following:
 * Jessassin-CH-CommonMethods (1.0.0+)
 
 Commands:
-* /plot <Action> <Arguments>
+* /plot \<Action\> \<Arguments\>
 
 	Actions:
-	* generate
-		Args:
-		* <Block1,Block2,Block3,Block4> (array)
-	* claim
-		Args:
-		* <[Name of schematic to load]>
-	* unclaim
-		Args:
-		* <[Name of schematic to save]>
+	* generate \[Block1,Block2,Block3,Block4\]
+	* claim \[Name of schematic to load\]
+	* unclaim \[Name of schematic to save\]
 	* info
-		No arguments
