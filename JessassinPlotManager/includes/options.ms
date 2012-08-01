@@ -1,3 +1,4 @@
+assign(@jessassindefaultplotcount,5)
 assign(@jessassinplotsize,256)
 assign(@jessassinplotheight,4)
 assign(@jessassinplotbedrock,1)

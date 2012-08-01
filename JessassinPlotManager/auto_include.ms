@@ -3,6 +3,29 @@
 # | Auto_Include.ms                              |
 # +----------------------------------------------+
 
+proc(_jessassin_plotmanager_init,@player,assign(@force,'no'),
+	include('/includes/options.ms')
+	assign(@defaultplotcount,@jessassindefaultplotcount)
+	if(
+		not(has_value(concat(@player,'_plotcount'))),
+			store_value(concat(@player,'_plotcount'),0)
+	)
+	if(
+		not(has_value(concat(@player,'_maxplotcount'))),
+			store_value(concat(@player,'_maxplotcount'),@defaultplotcount)
+	)
+#	if(
+#		not(has_value(concat(@player,'_plotarray'))),
+#			store_value(concat(@player,'_plotarray'),'')
+#	)
+	if(
+		equals(@force,force),
+#			store_value(concat(@player,'_plotarray'),'')
+			store_value(concat(@player,'_maxplotcount'),@defaultplotcount)
+			store_value(concat(@player,'_plotcount'),0)
+	)
+)
+
 proc(_jessassin_get_player_plotinfo,@player,
 	if(
 		has_value(concat(@player,'_plotarray')),
@@ -35,11 +58,123 @@ proc(_jessassin_get_plot_members,@plotaddress,
 	return(@plotmembers)
 )
 
-#proc(_jessassin_claimplot,@locationarray,@player,
-#	include('/includes/options.ms')
-#	assign(@playerplotinfo,_jessassin_get_player_plotinfo(@player))
-#	assign(@remainingplots,_jessassin_get_player_plotinfo(@player))
+#proc(_jessassin_initializeplot,@address,
+#	if(
+#		not(has_value(concat(@address,'_owner'),
+#			store_value('')
+#	)
+#	if(
+#		not(has_value()),
+#			store_value()
+#	)
 #)
+
+proc(_jessassin_claimplot,@coords,@player,
+	assign(@playerinfo,_jessassin_get_player_plotinfo(@player))
+	assign(@plotinfo,_jessassin_plotinfo(@coords))
+	#player vars
+	assign(@ownedplotarray,@playerinfo[0])
+	assign(@ownedplotcount,@playerinfo[1])
+	assign(@maxplotcount,@playerinfo[2])
+	#plot vars
+	assign(@plotaddress,@plotinfo[3])
+	assign(@plotowner,@plotinfo[4])
+	assign(@plotmemberarray,@plotinfo[5])
+	#check if plot is owned
+	if(
+		gt(length(@plotowner),1),
+		return('Plot is already owned!')
+	)
+	#check if player has avaliable plots
+	if(
+		lte(@maxplotcount,0),
+		return('You already own the max number of plots!')
+	)
+	#assign vars to be written
+	assign(@newownedplotcount,add(@ownedplotcount,1))
+	assign(@newmaxplotcount,subtract(@maxplotcount,1))
+	if(
+		gt(length(@ownedplotarray),0),
+		msg('pushing array')
+		assign(@newownedplotarray,@ownedplotarray)
+		array_push(@newownedplotarray,@plotaddress),
+		msg('assigning array')
+		msg(@newplotarray,@plotaddress)
+		assign(@newownedplotarray,array(@plotaddress))
+	)
+	#msg()
+	#msg(@ownedplotarray)
+	#msg(@ownedplotcount)
+	#msg(@maxplotcount)
+	#msg()
+	#msg(@newownedplotarray)
+	#msg(@newownedplotcount)
+	#msg(@newmaxplotcount)
+	#msg()
+	#write to persistance DB
+	store_value(concat(@player,'_plotcount'),@newownedplotcount)
+	store_value(concat(@player,'_maxplotcount'),@newmaxplotcount)
+	store_value(concat(@player,'_plotarray'),@newownedplotarray)
+	store_value(concat(@plotaddress,'_owner'),@player)
+)
+
+proc(_jessassin_unclaimplot,@coords,@player,
+	assign(@playerinfo,_jessassin_get_player_plotinfo(@player))
+	assign(@plotinfo,_jessassin_plotinfo(@coords))
+	#player vars
+	assign(@ownedplotarray,@playerinfo[0])
+	assign(@ownedplotcount,@playerinfo[1])
+	assign(@maxplotcount,@playerinfo[2])
+	#plot vars
+	assign(@plotaddress,@plotinfo[3])
+	assign(@plotowner,@plotinfo[4])
+	assign(@plotmemberarray,@plotinfo[5])
+	#check if plot is owned
+	if(
+		lt(length(@plotowner),1),
+		return('Plot is not owned!')
+	)
+	#check if plot is owned by player
+	if(
+		not(equals_ic(@player,@plotowner)),
+		return('You do not own this plot!')
+	)
+	#assign vars to be written
+	assign(@newownedplotcount,subtract(@ownedplotcount,1))
+	assign(@newmaxplotcount,add(@maxplotcount,1))
+#	if(
+#		gt(length(@ownedplotarray),0),
+#		msg('pushing array')
+#		assign(@newownedplotarray,@ownedplotarray)
+#		array_push(@newownedplotarray,@plotaddress),
+#		msg('assigning array')
+#		msg(@newplotarray,@plotaddress)
+#		assign(@newownedplotarray,array(@ownedplotarray))
+#	)
+	assign(@newownedplotarray,@ownedplotarray)
+	assign(@counter,0)
+	foreach(@newownedplotarray,@plot,
+		if(equals(@plot,@plotaddress),
+			assign(@removeindex,@counter)
+		)
+		assign(@counter,add(@counter,1))
+	)
+	array_remove(@newownedplotarray,@removeindex)
+	#msg()
+	#msg(@ownedplotarray)
+	#msg(@ownedplotcount)
+	#msg(@maxplotcount)
+	#msg()
+	#msg(@newownedplotarray)
+	#msg(@newownedplotcount)
+	#msg(@newmaxplotcount)
+	#msg()
+	#write to persistance DB
+	store_value(concat(@player,'_plotcount'),@newownedplotcount)
+	store_value(concat(@player,'_maxplotcount'),@newmaxplotcount)
+	store_value(concat(@player,'_plotarray'),@newownedplotarray)
+	store_value(concat(@plotaddress,'_owner'),'')
+)
 
 proc(_jessassin_plot_address_coordinates,@address,
 	

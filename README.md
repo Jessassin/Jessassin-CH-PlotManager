@@ -39,7 +39,7 @@ Persistance database:
 * player_maxplotcount,"Number of plots player can still claim"
 * player_plotarray,array(plot1addr,plot2addr,plot3addr,etc.)
 * plotaddress_owner
-* plotaddress_members,array(member1,member2,member3)
+* plotaddress_memberarray,array(member1,member2,member3)
 
 To do:
 * add worldguard integration

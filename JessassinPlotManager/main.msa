@@ -3,6 +3,10 @@
 # | Main.msa                                     |
 # +----------------------------------------------+
 
+admin:/forceinit [$] = >>>
+	_jessassin_plotmanager_init(player(),'force')
+<<<
+
 all:/plotcorners = >>>
 	assign(@playerpos,pinfo(player(),1))
 	msg(_jessassin_plotcorners(@playerpos))
@@ -40,7 +44,8 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 				not(has_permission(@player,'jessassin.plot.claim')),
 				die('You do not have permission to do this!')
 			)
-			msg('placeholder for /plot claim command')
+			#msg('placeholder for /plot claim command')
+			msg(_jessassin_claimplot(@playerpos,@player))
 	)
 	if(
 		equals_ic(@peram1,'unclaim'),
@@ -48,7 +53,8 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 				not(has_permission(@player,'jessassin.plot.unclaim')),
 					die('You do not have permission to do this!')
 			)
-			msg('placeholder for /plot unclaim command')
+			#msg('placeholder for /plot unclaim command')
+			msg(_jessassin_unclaimplot(@playerpos,@player))
 	)
 	if(
 		equals_ic(@peram1,'generate'),
@@ -104,18 +110,28 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 				die('You do not have permission to do this!')
 			)
 			if(
-				is_null(@peram2),
+				lt(length(@peram2),1),
 					assign(@player,player()),
 					assign(@player,@peram2)
 			)
 			assign(@playerplotinfo,_jessassin_get_player_plotinfo(@player))
 			msg()
-			msg('Player information:')
+			msg(concat('Player information for ',@player))
 			msg(concat('Owned plots: ',@playerplotinfo[0]))
 			msg(concat('Number of owned plots: ',@playerplotinfo[1]))
 			msg(concat('Number of avaliable plots: ',@playerplotinfo[2]))
 			msg()
 	)
+<<<
+
+all:/debug [$] = >>>
+#msg(get_value(concat(player(),'_plotarray')))
+assign(@arraytest,array(a,b,c,d,e))
+assign(@valtest,f)
+assign(@newarray,array_push(@arraytest,@valtest))
+msg(@arraytest)
+msg(@valtest)
+msg(@newarray)
 <<<
 
 
