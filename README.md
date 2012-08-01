@@ -27,6 +27,7 @@ Commands:
 Permissions:
 * ch.all = required to run
 * Jessassin.plot.admin
+* Jessassin.plot.command
 * Jessassin.plot.claim
 * Jessassin.plot.unclaim
 * Jessassin.plot.generate

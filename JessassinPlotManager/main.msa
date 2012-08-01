@@ -9,8 +9,12 @@ all:/plotcorners = >>>
 <<<
 
 all:/plot [$peram1=''] [$peram2=''] = >>>
-	include('/includes/options.ms')
 	assign(@player,player())
+	if(
+		not(has_permission(@player,'jessassin.plot.command')),
+		die('You do not have permission to run any /plot commands!')
+	)
+	include('/includes/options.ms')
 	assign(@command,'/plot')
 	assign(@syntax,'<peram1> <peram2>')
 	assign(@peram1,$peram1)
@@ -32,14 +36,26 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	)
 	if(
 		equals_ic(@peram1,'claim'),
-			msg('You need jessassin.claimplot.1 to do that!')
+			if(
+				not(has_permission(@player,'jessassin.plot.claim')),
+				die('You do not have permission to do this!')
+			)
+			msg('placeholder for /plot claim command')
 	)
 	if(
 		equals_ic(@peram1,'unclaim'),
-			msg('You need jessassin.unclaim to do that!')
+			if(
+				not(has_permission(@player,'jessassin.plot.unclaim')),
+					die('You do not have permission to do this!')
+			)
+			msg('placeholder for /plot unclaim command')
 	)
 	if(
 		equals_ic(@peram1,'generate'),
+			if(
+				not(has_permission(@player,'jessassin.plot.generate')),
+					die('You do not have permission to do this!')
+			)
 			assign(@starttime,nano_time())
 			assign(@colorarray,array('35:8','35:7','35:15'))
 			assign(@maxcolors,length(@jessassinplotcolors))
@@ -56,6 +72,10 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	)
 	if(
 		equals_ic(@peram1,'info'),
+			if(
+				not(has_permission(@player,'jessassin.plot.info')),
+					die('You do not have permission to do this!')
+			)
 			assign(@plotinfo,_jessassin_plotinfo(@playerpos))
 			if(
 				lt(length(@plotinfo[4]),1),
@@ -79,6 +99,10 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	)
 	if(
 		equals_ic(@peram1,'playerinfo'),
+			if(
+				not(has_permission(@player,'jessassin.plot.playerinfo')),
+				die('You do not have permission to do this!')
+			)
 			if(
 				is_null(@peram2),
 					assign(@player,player()),

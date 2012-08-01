@@ -35,11 +35,11 @@ proc(_jessassin_get_plot_members,@plotaddress,
 	return(@plotmembers)
 )
 
-proc(_jessassin_claimplot,@locationarray,@player,
-	include('/includes/options.ms')
-	assign(@playerplotinfo,_jessassin_get_player_plotinfo(@player))
-	assign(@remainingplots,
-)
+#proc(_jessassin_claimplot,@locationarray,@player,
+#	include('/includes/options.ms')
+#	assign(@playerplotinfo,_jessassin_get_player_plotinfo(@player))
+#	assign(@remainingplots,_jessassin_get_player_plotinfo(@player))
+#)
 
 proc(_jessassin_plot_address_coordinates,@address,
 	
