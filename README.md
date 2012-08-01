@@ -22,3 +22,20 @@ Commands:
 	* claim \[Name of schematic to load\]
 	* unclaim \[Name of schematic to save\]
 	* info
+	
+Permissions:
+* ch.all = required to run
+* Jessassin.plot.admin
+* Jessassin.plot.claim
+* Jessassin.plot.unclaim
+* Jessassin.plot.generate
+* Jessassin.plot.save
+* Jessassin.plot.load
+
+Persistance database:
+* jessassin_plot_count_(PlayerName),"Number of plots owned by player"
+* jessassin_plot_maxcount_(PlayerName),"Number of plots player can still claim"
+* jessassin_plot_coords_(PlayerName),array(plot1addr,plot2addr,plot3addr,etc.)
+* jessassin_plot_info_(plotaddress),array(owner,array(member1,member2),array(interact1,interact2))
+
+

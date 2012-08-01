@@ -1,0 +1,76 @@
+# +----------------------------------------------+
+# | Jessassin's Plot Management System           |
+# | Main.msa                                     |
+# +----------------------------------------------+
+
+all:/plotcorners = >>>
+	assign(@playerpos,pinfo(player(),1))
+	msg(_jessassin_plotcorners(@playerpos))
+<<<
+
+all:/plot [$peram1=''] [$peram2=''] = >>>
+	include('/includes/options.ms')
+	assign(@player,player())
+	assign(@command,'/plot')
+	assign(@syntax,'<peram1> <peram2>')
+	assign(@peram1,$peram1)
+	assign(@peram2,$peram2)
+	if(
+		not(
+			gt(
+				length(@peram1),0)),
+				die(_jessassin_syntaxerror(@command,@syntax))
+	)
+	assign(@quadrant,_currentquadrant(pinfo(player(),1)))
+	assign(@playerpos,pinfo(@player,1))
+	assign(@playerx,@playerpos[0])
+	assign(@playerz,@playerpos[2])
+	assign(@peram1options,array('claim','unclaim','generate','info'))
+	if(
+		not(
+			array_contains_ic(@peram1options,@peram1)),
+		die(_jessassin_syntaxmessage(@command,'<claim,unclaim,generate,info> <peram2>'))
+	)
+	if(
+		equals_ic(@peram1,'claim'),
+			msg('You need jessassin.claimplot.1 to do that!')
+			_Jessassin_Generate_Plot(@playerpos)
+			msg()
+			msg()
+			msg('Plot claimed and generated!')
+			msg('Congratulations!')
+	)
+	if(
+		equals_ic(@peram1,'unclaim'),
+			msg('You need jessassin.unclaim to do that!')
+			
+	)
+	if(
+		equals_ic(@peram1,'generate'),
+			assign(@starttime,nano_time())
+			assign(@colorarray,array('35:8','35:7','35:15'))
+			assign(@maxcolors,length(@jessassinplotcolors))
+			assign(@color1,@jessassinplotcolors[rand(0,subtract(@maxcolors,1))])
+			assign(@color2,@jessassinplotcolors[rand(0,subtract(@maxcolors,1))])
+			assign(@color3,@jessassinplotcolors[rand(0,subtract(@maxcolors,1))])
+			assign(@colorarray,array(@color1,@color2,@color3))
+			
+			_Jessassin_Generate_Plot(@playerpos,@colorarray)
+			assign(@endtime,nano_time())
+			assign(@totaltime,subtract(@endtime,@starttime))
+			msg(concat('Total Time: ',@totaltime,' NanoSeconds'))
+			msg(concat('Total Time: ',ceil(divide(@totaltime,1000000000)),' Seconds'))
+	)
+	if(
+		equals_ic(@peram1,'info'),
+			assign(@plotinfo,_jessassin_plotinfo(@playerpos))
+			msg()
+			msg('Plot information:')
+			msg(concat('Quadrant: ',@plotinfo[0]))
+			msg(concat('Coordinate 1: ',@plotinfo[1]))
+			msg(concat('Coordinate 2: ',@plotinfo[2]))
+			msg(concat('Address: ',@plotinfo[3]))
+			msg(concat('Owner: ', 'This plot is unclaimed!'))
+			msg()
+	)
+<<<
