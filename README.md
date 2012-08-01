@@ -41,11 +41,11 @@ Persistance database:
 * plotaddress_members,array(member1,member2,member3)
 
 To do:
-*add worldguard integration
-*improve speed of plot floor generation
-*allow for more variables, like default number of plots
-*add administrative commands
-*reduce chat spam
-*integrate pre-programmed code, that was removed for rewriting
+* add worldguard integration
+* improve speed of plot floor generation
+* allow for more variables, like default number of plots
+* add administrative commands
+* reduce chat spam
+* integrate pre-programmed code, that was removed for rewriting
 
 
