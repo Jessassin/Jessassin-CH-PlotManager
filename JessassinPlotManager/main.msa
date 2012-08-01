@@ -16,34 +16,27 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	assign(@peram1,$peram1)
 	assign(@peram2,$peram2)
 	if(
-		not(
-			gt(
-				length(@peram1),0)),
-				die(_jessassin_syntaxerror(@command,@syntax))
+		lt(
+			length(@peram1),1),
+			die(_jessassin_syntaxerror(@command,@syntax))
 	)
 	assign(@quadrant,_currentquadrant(pinfo(player(),1)))
 	assign(@playerpos,pinfo(@player,1))
 	assign(@playerx,@playerpos[0])
 	assign(@playerz,@playerpos[2])
-	assign(@peram1options,array('claim','unclaim','generate','info'))
+	assign(@peram1options,array('claim','unclaim','generate','info','playerinfo'))
 	if(
 		not(
 			array_contains_ic(@peram1options,@peram1)),
-		die(_jessassin_syntaxmessage(@command,'<claim,unclaim,generate,info> <peram2>'))
+		die(_jessassin_syntaxmessage(@command,'<claim,unclaim,generate,info,playerinfo> <peram2>'))
 	)
 	if(
 		equals_ic(@peram1,'claim'),
 			msg('You need jessassin.claimplot.1 to do that!')
-			_Jessassin_Generate_Plot(@playerpos)
-			msg()
-			msg()
-			msg('Plot claimed and generated!')
-			msg('Congratulations!')
 	)
 	if(
 		equals_ic(@peram1,'unclaim'),
 			msg('You need jessassin.unclaim to do that!')
-			
 	)
 	if(
 		equals_ic(@peram1,'generate'),
@@ -64,13 +57,42 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	if(
 		equals_ic(@peram1,'info'),
 			assign(@plotinfo,_jessassin_plotinfo(@playerpos))
+			if(
+				lt(length(@plotinfo[4]),1),
+					assign(@owner,'No owner'),
+					assign(@owner,@plotinfo[4])
+			)
+			if(
+				lt(length(@plotinfo[5]),1),
+					assign(@memberarray,'No members'),
+					assign(@memberarray,@plotinfo[5])
+			)
 			msg()
 			msg('Plot information:')
 			msg(concat('Quadrant: ',@plotinfo[0]))
 			msg(concat('Coordinate 1: ',@plotinfo[1]))
 			msg(concat('Coordinate 2: ',@plotinfo[2]))
 			msg(concat('Address: ',@plotinfo[3]))
-			msg(concat('Owner: ', 'This plot is unclaimed!'))
+			msg(concat('Owner: ',@owner))
+			msg(concat('Members: ',@memberarray))
+			msg()
+	)
+	if(
+		equals_ic(@peram1,'playerinfo'),
+			if(
+				is_null(@peram2),
+					assign(@player,player()),
+					assign(@player,@peram2)
+			)
+			assign(@playerplotinfo,_jessassin_get_player_plotinfo(@player))
+			msg()
+			msg('Player information:')
+			msg(concat('Owned plots: ',@playerplotinfo[0]))
+			msg(concat('Number of owned plots: ',@playerplotinfo[1]))
+			msg(concat('Number of avaliable plots: ',@playerplotinfo[2]))
 			msg()
 	)
 <<<
+
+
+

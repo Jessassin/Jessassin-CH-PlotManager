@@ -2,7 +2,48 @@
 # | Jessassin's Plot Management System           |
 # | Auto_Include.ms                              |
 # +----------------------------------------------+
-include('/PlotGeneration.Library/PlotGenerator.ms')
+
+proc(_jessassin_get_player_plotinfo,@player,
+	if(
+		has_value(concat(@player,'_plotarray')),
+			assign(@plotarray,get_value(concat(@player,'_plotarray')))
+	)
+	if(
+		has_value(concat(@player,'_plotcount')),
+			assign(@plotcount,get_value(concat(@player,'_plotcount')))
+	)
+	if(
+		has_value(concat(@player,'_maxplotcount')),
+			assign(@maxplotcount,get_value(concat(@player,'_maxplotcount')))
+	)
+	return(array(@plotarray,@plotcount,@maxplotcount))
+)
+
+proc(_jessassin_get_plot_owner,@plotaddress,
+	if(
+		has_value(concat(@plotaddress,'_owner')),
+			assign(@plotowner,get_value(concat(@plotaddress,'_owner')))
+	)
+	return(@plotowner)
+)
+
+proc(_jessassin_get_plot_members,@plotaddress,
+	if(
+		has_value(concat(@plotaddress,'_memberarray')),
+			assign(@plotmembers,get_value(concat(@plotaddress,'_memberarray')))
+	)
+	return(@plotmembers)
+)
+
+proc(_jessassin_claimplot,@locationarray,@player,
+	include('/includes/options.ms')
+	assign(@playerplotinfo,_jessassin_get_player_plotinfo(@player))
+	assign(@remainingplots,
+)
+
+proc(_jessassin_plot_address_coordinates,@address,
+	
+)
 
 proc(_jessassin_plotcorners,@locationarray,
 	include('/includes/options.ms')
@@ -65,7 +106,6 @@ proc(_jessassin_plotcorners,@locationarray,
 		assign(@corner4,array(add(@refcorner[0],@plotsize1),1,@refcorner[2]))
 	)
 	return(array(@quadrant,@corner1,@corner2,@corner3,@corner4,@spawncorner,@oppositespawncorner))
-	
 )
 
 proc(_jessassin_plotinfo,@coordinate,
@@ -74,7 +114,9 @@ proc(_jessassin_plotinfo,@coordinate,
 	assign(@coord2,_jessassin_plotcorners(@coordinate)[6])
 	assign(@address,_jessassin_find_plot_address(@coord2))
 	assign(@realaddress,_jessassin_format_plot_address(@address))
-	return(array(@quadrant,@coord1,@coord2,@address))
+	assign(@owner,_jessassin_get_plot_owner(@realaddress))
+	assign(@memberarray,_jessassin_get_plot_members(@realaddress))
+	return(array(@quadrant,@coord1,@coord2,@realaddress,@owner,@memberarray))
 )
 
 proc(_jessassin_currentquadrant,@locarray,

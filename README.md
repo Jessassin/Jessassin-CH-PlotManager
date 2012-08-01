@@ -1,15 +1,15 @@
 **Jessassin's CommandHelper Plot Manager**
 
-This is a simple plot management snap-in for CommandHelper.
+This is a simple plot management snap-in for CommandHelper. I hope that it will become a simple interface for worldguard, and a replacement for more advanced plot management plugins.
 
-It has the following features:
-
-* ability to generate a custom plot floor pattern
-* ability to claim/unclaim plots
-* ability to set the default or max number of plots a player is allowed to have
+It has (or will have) the following features:
+* generate a custom plot floor pattern
+* allow players to claim/unclaim plots
+* set the default or max number of plots a player is allowed to have
+* allow members to allow certain players to build on their plot
+* allow admins/mods to build on any plot
 
 Dependancies:
-
 * WorldEdit (5.3+)
 * WorldGuard (5.0+)
 * Jessassin-CH-CommonMethods (1.0.0+)
@@ -22,7 +22,8 @@ Commands:
 	* claim \[Name of schematic to load\]
 	* unclaim \[Name of schematic to save\]
 	* info
-	
+	* playerinfo
+
 Permissions:
 * ch.all = required to run
 * Jessassin.plot.admin
@@ -33,9 +34,18 @@ Permissions:
 * Jessassin.plot.load
 
 Persistance database:
-* jessassin_plot_count_(PlayerName),"Number of plots owned by player"
-* jessassin_plot_maxcount_(PlayerName),"Number of plots player can still claim"
-* jessassin_plot_coords_(PlayerName),array(plot1addr,plot2addr,plot3addr,etc.)
-* jessassin_plot_info_(plotaddress),array(owner,array(member1,member2),array(interact1,interact2))
+* player_plotcount,"Number of plots owned by player"
+* player_maxplotcount,"Number of plots player can still claim"
+* player_plotarray,array(plot1addr,plot2addr,plot3addr,etc.)
+* plotaddress_owner
+* plotaddress_members,array(member1,member2,member3)
+
+To do:
+*add worldguard integration
+*improve speed of plot floor generation
+*allow for more variables, like default number of plots
+*add administrative commands
+*reduce chat spam
+*integrate pre-programmed code, that was removed for rewriting
 
 
