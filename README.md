@@ -5,7 +5,7 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 It has (or will have) the following features:
 * generate a custom plot floor pattern
 * allow players to claim/unclaim plots
-* set the default or max number of plots a player is allowed to have
+* set the default number of plots a member can have
 * allow members to allow certain players to build on their plot
 * allow admins/mods to build on any plot
 
