@@ -3,13 +3,34 @@
 # | Main.msa                                     |
 # +----------------------------------------------+
 
-admin:/forceinit [$] = >>>
-	_jessassin_plotmanager_init(player(),'force')
+all:/signtest = >>>
+set_sign_text(pinfo(player())[2],§aAvailable)
 <<<
 
-all:/plotcorners = >>>
-	assign(@playerpos,pinfo(player(),1))
-	msg(_jessassin_plotcorners(@playerpos))
+all:/maptest [$address] [$color] = >>>
+assign(@red,'35:14')
+assign(@green,'35:5')
+if(equals_ic($color,'green'),
+	assign(@color,@green),
+	assign(@color,@red)
+)
+assign(@addresscoords,_jessassin_plot_address_coordinates($address))
+#msg(concat('Quadrant: ',@addresscoords[0]))
+#msg(concat('X: ',@addresscoords[1]))
+#msg(concat('Z: ',@addresscoords[2]))
+assign(@newaddresscoords,_jessassin_map_location($address))
+#msg(concat('Quadrant: ',@newaddresscoords[0]))
+#msg(concat('New X: ',@newaddresscoords[1]))
+#msg(concat('New Y: ',@newaddresscoords[2]))
+#msg(concat('Point2: ',@newaddresscoords[3]))
+assign(@point2,@newaddresscoords[3])
+assign(@point1,array(@newaddresscoords[1],@point2[1],@newaddresscoords[2]))
+msg(concat('Point 1: ',@point1))
+msg(concat('Point 2: ',@point2))
+sk_pos1(@point1)
+sk_pos2(@point2)
+run(concat('//set ',@color)) 
+run('//sel')
 <<<
 
 all:/plot [$peram1=''] [$peram2=''] = >>>
@@ -82,10 +103,10 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	)
 	if(
 		equals_ic(@peram1,'info'),
-			if(
-				not(has_permission(@player,'jessassin.plot.info')),
-					die('You do not have permission to do this!')
-			)
+#			if(
+#				not(has_permission(@player,'jessassin.plot.info')),
+#					die('You do not have permission to do this!')
+#			)
 			assign(@plotinfo,_jessassin_plotinfo(@playerpos))
 			if(
 				lt(length(@plotinfo[4]),1),
@@ -126,16 +147,6 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 			msg(concat('Number of avaliable plots: ',@playerplotinfo[2]))
 			msg()
 	)
-<<<
-
-all:/debug [$] = >>>
-#msg(get_value(concat(player(),'_plotarray')))
-assign(@arraytest,array(a,b,c,d,e))
-assign(@valtest,f)
-assign(@newarray,array_push(@arraytest,@valtest))
-msg(@arraytest)
-msg(@valtest)
-msg(@newarray)
 <<<
 
 

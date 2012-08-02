@@ -1,5 +1,6 @@
+assign(@jessassinmapcenter,array(-16,4,-17))
 assign(@jessassindefaultplotcount,5)
-assign(@jessassinplotsize,256)
+assign(@jessassinplotsize,32)
 assign(@jessassinplotheight,4)
 assign(@jessassinplotbedrock,1)
 assign(@jessassinplotinset,0)

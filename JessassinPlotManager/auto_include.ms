@@ -58,17 +58,6 @@ proc(_jessassin_get_plot_members,@plotaddress,
 	return(@plotmembers)
 )
 
-#proc(_jessassin_initializeplot,@address,
-#	if(
-#		not(has_value(concat(@address,'_owner'),
-#			store_value('')
-#	)
-#	if(
-#		not(has_value()),
-#			store_value()
-#	)
-#)
-
 proc(_jessassin_claimplot,@coords,@player,
 	assign(@playerinfo,_jessassin_get_player_plotinfo(@player))
 	assign(@plotinfo,_jessassin_plotinfo(@coords))
@@ -146,8 +135,49 @@ proc(_jessassin_unclaimplot,@coords,@player,
 	store_value(concat(@plotaddress,'_owner'),'')
 )
 
-proc(_jessassin_plot_address_coordinates,@address,
+proc(_jessassin_plot_addmember,@coords,@member,@player,
 	
+)
+
+proc(_jessassin_plot_address_coordinates,@address,
+	assign(@split,reg_split('',@address))
+	array_remove(@split,0)
+	assign(@quad,@split[0])
+	assign(@x,concat(@split[1],@split[2]))
+	assign(@z,concat(@split[3],@split[4]))
+	return(array(@quad,@x,@z))
+)
+
+proc(_jessassin_map_location,@address,
+	include('/includes/options.ms')
+	assign(@addresscoords,_jessassin_plot_address_coordinates(@address))
+	assign(@quadrant,@addresscoords[0])
+	assign(@x,@addresscoords[1])
+	assign(@z,@addresscoords[2])
+	assign(@newx,multiply(@x,3))
+	assign(@newz,multiply(@z,3))
+	assign(@maplocation,@jessassinmapcenter)
+	if(equals(@quadrant,1),
+		assign(@newerx,add(@maplocation[0],@newx))
+		assign(@newerz,add(@maplocation[2],@newz))
+		assign(@point2,array(add(@newerx,1),@maplocation[1],add(@newerz,1)))
+	)
+	if(equals(@quadrant,2),
+		assign(@newerx,add(@maplocation[0],@newx))
+		assign(@newerz,subtract(@maplocation[2],@newz))
+		assign(@point2,array(add(@newerx,1),@maplocation[1],subtract(@newerz,1)))
+	)
+	if(equals(@quadrant,3),
+		assign(@newerx,subtract(@maplocation[0],@newx))
+		assign(@newerz,subtract(@maplocation[2],@newz))
+		assign(@point2,array(subtract(@newerx,1),@maplocation[1],subtract(@newerz,1)))
+	)
+	if(equals(@quadrant,4),
+		assign(@newerx,subtract(@maplocation[0],@newx))
+		assign(@newerz,add(@maplocation[2],@newz))
+		assign(@point2,array(subtract(@newerx,1),@maplocation[1],add(@newerz,1)))
+	)
+	return(array(@quadrant,@newerx,@newerz,@point2))
 )
 
 proc(_jessassin_plotcorners,@locationarray,
