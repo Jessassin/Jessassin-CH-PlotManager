@@ -95,22 +95,10 @@ proc(_jessassin_claimplot,@coords,@player,
 	assign(@newmaxplotcount,subtract(@maxplotcount,1))
 	if(
 		gt(length(@ownedplotarray),0),
-		msg('pushing array')
 		assign(@newownedplotarray,@ownedplotarray)
 		array_push(@newownedplotarray,@plotaddress),
-		msg('assigning array')
-		msg(@newplotarray,@plotaddress)
 		assign(@newownedplotarray,array(@plotaddress))
 	)
-	#msg()
-	#msg(@ownedplotarray)
-	#msg(@ownedplotcount)
-	#msg(@maxplotcount)
-	#msg()
-	#msg(@newownedplotarray)
-	#msg(@newownedplotcount)
-	#msg(@newmaxplotcount)
-	#msg()
 	#write to persistance DB
 	store_value(concat(@player,'_plotcount'),@newownedplotcount)
 	store_value(concat(@player,'_maxplotcount'),@newmaxplotcount)
@@ -142,15 +130,6 @@ proc(_jessassin_unclaimplot,@coords,@player,
 	#assign vars to be written
 	assign(@newownedplotcount,subtract(@ownedplotcount,1))
 	assign(@newmaxplotcount,add(@maxplotcount,1))
-#	if(
-#		gt(length(@ownedplotarray),0),
-#		msg('pushing array')
-#		assign(@newownedplotarray,@ownedplotarray)
-#		array_push(@newownedplotarray,@plotaddress),
-#		msg('assigning array')
-#		msg(@newplotarray,@plotaddress)
-#		assign(@newownedplotarray,array(@ownedplotarray))
-#	)
 	assign(@newownedplotarray,@ownedplotarray)
 	assign(@counter,0)
 	foreach(@newownedplotarray,@plot,
@@ -160,16 +139,7 @@ proc(_jessassin_unclaimplot,@coords,@player,
 		assign(@counter,add(@counter,1))
 	)
 	array_remove(@newownedplotarray,@removeindex)
-	#msg()
-	#msg(@ownedplotarray)
-	#msg(@ownedplotcount)
-	#msg(@maxplotcount)
-	#msg()
-	#msg(@newownedplotarray)
-	#msg(@newownedplotcount)
-	#msg(@newmaxplotcount)
-	#msg()
-	#write to persistance DB
+	#write vars to persistance DB
 	store_value(concat(@player,'_plotcount'),@newownedplotcount)
 	store_value(concat(@player,'_maxplotcount'),@newmaxplotcount)
 	store_value(concat(@player,'_plotarray'),@newownedplotarray)

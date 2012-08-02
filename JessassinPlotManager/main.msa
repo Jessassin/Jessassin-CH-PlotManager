@@ -14,10 +14,10 @@ all:/plotcorners = >>>
 
 all:/plot [$peram1=''] [$peram2=''] = >>>
 	assign(@player,player())
-	if(
-		not(has_permission(@player,'jessassin.plot.command')),
-		die('You do not have permission to run any /plot commands!')
-	)
+#	if(
+#		not(has_permission(@player,'jessassin.plot.command')),
+#		die('You do not have permission to run any /plot commands!')
+#	)
 	include('/includes/options.ms')
 	assign(@command,'/plot')
 	assign(@syntax,'<peram1> <peram2>')
@@ -44,17 +44,21 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 				not(has_permission(@player,'jessassin.plot.claim')),
 				die('You do not have permission to do this!')
 			)
-			#msg('placeholder for /plot claim command')
-			msg(_jessassin_claimplot(@playerpos,@player))
+			assign(@errormessage,_jessassin_claimplot(@playerpos,@player))
+			if(
+				gt(length(@errormessage),0),
+					msg(@errormessage),
+					msg('Plot claimed!')
+			)
 	)
 	if(
 		equals_ic(@peram1,'unclaim'),
+			assign(@errormessage,_jessassin_unclaimplot(@playerpos,@player))
 			if(
-				not(has_permission(@player,'jessassin.plot.unclaim')),
-					die('You do not have permission to do this!')
+				gt(length(@errormessage),0),
+					msg(@errormessage),
+					msg('Plot unclaimed!')
 			)
-			#msg('placeholder for /plot unclaim command')
-			msg(_jessassin_unclaimplot(@playerpos,@player))
 	)
 	if(
 		equals_ic(@peram1,'generate'),

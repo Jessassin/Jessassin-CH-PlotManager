@@ -22,11 +22,10 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 
 ### Commands:
 * /plot \<Action\> \<Arguments\>
-
 	### Actions:
-	* generate \[Block1,Block2,Block3,Block4\]
-	* claim \[Name of schematic to load\]
-	* unclaim \[Name of schematic to save\]
+	* generate \<Block1,Block2,Block3,Block4\>
+	* claim \<Name of schematic to load\>
+	* unclaim \<Name of schematic to save\>
 	* info
 	* playerinfo
 
@@ -60,4 +59,5 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 * add administrative commands
 * reduce chat spam
 * integrate pre-programmed code, that was removed for rewriting
-
+* Add command /plot lock, that prevents accidental /plot generate
+	* add persistance for plotaddress_plotlock
