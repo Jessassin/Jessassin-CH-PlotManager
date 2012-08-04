@@ -61,3 +61,23 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 * integrate pre-programmed code, that was removed for rewriting
 * Add command /plot lock, that prevents accidental /plot generate
 	* add persistance for plotaddress_plotlock
+	* (?) allow locking for other things, like building by members, or item interaction
+* plot membership
+	* plot member <add/remove>
+	* Plot guest <add/remove>
+* Plot reservations
+	* /plot reserve <reason>
+	* prevents plot from being claimed
+* Map border
+	* Prevent plots outside border from being claimed
+	* Automatically increase border distance, based on number of available plots
+* Plot map
+	* shows status of plots, in a logical grid formation that corrosponds to plot locations
+	* choose which plot the map is generated on, prevent building on said plot
+	* (?) allow members to claim plots by right clicking sign
+* Plot administration commands
+	* allow admins to override permissions/etc.
+* Auto-creation for warps and homes (essentials integration)
+* Multiple home management (essentials integration)
+* (?) Friends list
+	* friends are automatically added to "builder" group of all owned plots
