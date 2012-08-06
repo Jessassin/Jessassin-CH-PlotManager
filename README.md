@@ -17,6 +17,7 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 * [WorldEdit](http://dev.bukkit.org/server-mods/worldedit/)(5.3+)
 * [WorldGuard](http://dev.bukkit.org/server-mods/worldguard/)(5.0+)
 * [Jessassin-CH-CommonMethods](https://github.com/Jessassin/Jessassin-CH-CommonMethods) (1.0.0+)
+* Worldborder (looking at alternatives)
 
 ***
 
@@ -28,6 +29,8 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 	* unclaim \<Name of schematic to save\>
 	* info
 	* playerinfo
+	* Member \<add/remove\> \<player\>
+	* Guest \<add/remove\> \<player\>
 
 ***
 
@@ -40,6 +43,8 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 * Jessassin.plot.generate
 * Jessassin.plot.save
 * Jessassin.plot.load
+* Jessassin.plot.member
+* Jessassin.plot.guest
 
 ***
 
@@ -49,6 +54,7 @@ This is a simple plot management snap-in for CommandHelper. I hope that it will 
 * player_plotarray,array(plot1addr,plot2addr,plot3addr,etc.)
 * plotaddress_owner
 * plotaddress_memberarray,array(member1,member2,member3)
+* plotaddress_guestarray,array(guest1,guest2,guest3)
 
 ***
 
