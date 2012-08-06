@@ -3,8 +3,25 @@
 # | Main.msa                                     |
 # +----------------------------------------------+
 
-all:/signtest = >>>
-set_sign_text(pinfo(player())[2],§aAvailable)
+all:/connecturl [$player] = >>>
+if(
+	lt(length($player),1)
+		assign(@player,player()),
+		assign(@player,$player)
+)
+msg(concat(pinfo(@player)[12]))
+<<<
+
+all:/signtest [$peram] = >>>
+if(equals_ic($peram,'a'),
+	set_sign_text(pinfo(player())[2],concat('§a','[Available]'),concat('§b','[Plot: 10101]'),concat())
+)
+if(equals_ic($peram,'t'),
+	set_sign_text(pinfo(player())[2],concat('§4','[Taken]'),concat('§b','[Plot: 10101]'),concat('§1',player()),concat('§9','Mai Motto!'))
+)
+if(equals_ic($peram,'r'),
+	set_sign_text(pinfo(player())[2],concat('§e','[Reserved]'),concat('§b','[Plot: 10101]'),concat('§1',player()),concat('§9','Mai Motto!'))
+)
 <<<
 
 all:/maptest [$address] [$color] = >>>
@@ -33,7 +50,7 @@ run(concat('//set ',@color))
 run('//sel')
 <<<
 
-all:/plot [$peram1=''] [$peram2=''] = >>>
+all:/plot [$peram1=''] [$peram2=''] [$peram3=''] = >>>
 	assign(@player,player())
 #	if(
 #		not(has_permission(@player,'jessassin.plot.command')),
@@ -41,9 +58,10 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 #	)
 	include('/includes/options.ms')
 	assign(@command,'/plot')
-	assign(@syntax,'<peram1> <peram2>')
+	assign(@syntax,'<peram1> <peram2> <peram3>')
 	assign(@peram1,$peram1)
 	assign(@peram2,$peram2)
+	assign(@peram3,$peram3)
 	if(
 		lt(
 			length(@peram1),1),
@@ -53,11 +71,12 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 	assign(@playerpos,pinfo(@player,1))
 	assign(@playerx,@playerpos[0])
 	assign(@playerz,@playerpos[2])
-	assign(@peram1options,array('claim','unclaim','generate','info','playerinfo'))
+	assign(@address,_jessassin_plotinfo(@playerpos)[3])
+	assign(@peram1options,array('claim','unclaim','generate','info','playerinfo','member','guest'))
 	if(
 		not(
 			array_contains_ic(@peram1options,@peram1)),
-		die(_jessassin_syntaxmessage(@command,'<claim,unclaim,generate,info,playerinfo> <peram2>'))
+		die(_jessassin_syntaxmessage(@command,'<claim,unclaim,generate,info,playerinfo,member,guest> <peram2>'))
 	)
 	if(
 		equals_ic(@peram1,'claim'),
@@ -118,6 +137,11 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 					assign(@memberarray,'No members'),
 					assign(@memberarray,@plotinfo[5])
 			)
+			if(
+				lt(length(@plotinfo[6]),1),
+					assign(@guestarray,'No guests'),
+					assign(@guestarray,@plotinfo[6])
+			)
 			msg()
 			msg('Plot information:')
 			msg(concat('Quadrant: ',@plotinfo[0]))
@@ -126,6 +150,7 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 			msg(concat('Address: ',@plotinfo[3]))
 			msg(concat('Owner: ',@owner))
 			msg(concat('Members: ',@memberarray))
+			msg(concat('Guests: ',@guestarray))
 			msg()
 	)
 	if(
@@ -147,7 +172,52 @@ all:/plot [$peram1=''] [$peram2=''] = >>>
 			msg(concat('Number of avaliable plots: ',@playerplotinfo[2]))
 			msg()
 	)
-<<<
-
-
-
+	if(
+		equals_ic(@peram1,'member'),
+			if(
+				not(has_permission(@player,'jessassin.plot.member')),
+				die('You do not have permission to do this!')
+			)
+			if(
+				and(
+					not(equals_ic(@peram2,'add')),
+					not(equals_ic(@peram2,'remove'))
+				),
+				msg('Missing or invalid perameter!')
+				die('/plot member <add/remove>')
+			)
+			if(
+				lt(length(@peram3),3),
+				msg('Missing or invalid player!')
+				die('/plot member <add/remove> <player>')
+			)
+			if(equals_ic(@peram2,'add'),
+				msg(_jessassin_plot_addmember(@address,@peram3,@player)),
+				msg(_jessassin_plot_removemember(@address,@peram3,@player))
+			)
+	)
+	if(
+		equals_ic(@peram1,'guest'),
+			if(
+				not(has_permission(@player,'jessassin.plot.guest')),
+				die('You do not have permission to do this!')
+			)
+			if(
+				and(
+					not(equals_ic(@peram2,'add')),
+					not(equals_ic(@peram2,'remove'))
+				),
+				msg('Missing or invalid perameter!')
+				die('/plot guest <add/remove>')
+			)
+			if(
+				lt(length(@peram3),3),
+				msg('Missing or invalid player!')
+				die('/plot guest <add/remove> <player>')
+			)
+			if(equals_ic(@peram2,'add'),
+				msg(_jessassin_plot_addguest(@address,@peram3,@player)),
+				msg(_jessassin_plot_removeguest(@address,@peram3,@player))
+			)
+	)
+<<< 

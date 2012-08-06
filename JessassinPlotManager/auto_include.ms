@@ -3,7 +3,8 @@
 # | Auto_Include.ms                              |
 # +----------------------------------------------+
 
-proc(_jessassin_plotmanager_init,@player,assign(@force,'no'),
+proc(_jessassin_plotmanager_init,@player,
+	#initializes player in persistance DB, if they do not have values there.
 	include('/includes/options.ms')
 	assign(@defaultplotcount,@jessassindefaultplotcount)
 	if(
@@ -14,19 +15,13 @@ proc(_jessassin_plotmanager_init,@player,assign(@force,'no'),
 		not(has_value(concat(@player,'_maxplotcount'))),
 			store_value(concat(@player,'_maxplotcount'),@defaultplotcount)
 	)
-#	if(
-#		not(has_value(concat(@player,'_plotarray'))),
-#			store_value(concat(@player,'_plotarray'),'')
-#	)
-	if(
-		equals(@force,force),
-#			store_value(concat(@player,'_plotarray'),'')
-			store_value(concat(@player,'_maxplotcount'),@defaultplotcount)
-			store_value(concat(@player,'_plotcount'),0)
-	)
 )
 
 proc(_jessassin_get_player_plotinfo,@player,
+	#given player
+	#	returns the plots that payer owns in an array
+	#	returns number of plots they own
+	#	returns number of plots they can still claim
 	if(
 		has_value(concat(@player,'_plotarray')),
 			assign(@plotarray,get_value(concat(@player,'_plotarray')))
@@ -43,14 +38,17 @@ proc(_jessassin_get_player_plotinfo,@player,
 )
 
 proc(_jessassin_get_plot_owner,@plotaddress,
+	#given plot address, returns owner of plot
 	if(
 		has_value(concat(@plotaddress,'_owner')),
-			assign(@plotowner,get_value(concat(@plotaddress,'_owner')))
+			assign(@plotowner,get_value(concat(@plotaddress,'_owner'))),
+			assign(@plotowner,'No owner')
 	)
 	return(@plotowner)
 )
 
 proc(_jessassin_get_plot_members,@plotaddress,
+	#given plot address, returns 'members' of the plot
 	if(
 		has_value(concat(@plotaddress,'_memberarray')),
 			assign(@plotmembers,get_value(concat(@plotaddress,'_memberarray')))
@@ -58,7 +56,76 @@ proc(_jessassin_get_plot_members,@plotaddress,
 	return(@plotmembers)
 )
 
+proc(_jessassin_get_plot_guests,@plotaddress,
+	#given plot address, returns 'guests' of the plot
+	if(
+		has_value(concat(@plotaddress,'_guestarray')),
+			assign(@guestarray,get_value(concat(@plotaddress,'_guestarray')))
+	)
+	return(@guestarray)
+)
+
+proc(_jessassin_plot_addmember,@plotaddress,@member,@player,
+	assign(@plotowner,_jessassin_get_plot_owner(@plotaddress))
+	if(
+		has_value(concat(@plotaddress,'_memberarray')),
+			assign(@plotmemberarray,get_value(concat(@plotaddress,'_memberarray'))),
+			assign(@plotmemberarray,array())
+	)
+	if(
+		array_contains_ic(@plotmemberarray,@member),
+			return(concat('Player: ',@member,' is already a member!'))
+	)
+	array_push(@plotmemberarray,@member)
+	if(
+		equals_ic(@player,_jessassin_get_plot_owner(@plotaddress)),
+		store_value(concat(@plotaddress,'_memberarray'),@plotmemberarray)
+		return(concat('Player: ',@member,' added to members!')),
+		return('You do not own this plot!')
+	)
+)
+
+proc(_jessassin_plot_addguest,@plotaddress,@guest,@player,
+	assign(@plotowner,_jessassin_get_plot_owner(@plotaddress))
+	if(
+		has_value(concat(@plotaddress,'_guestarray')),
+			assign(@plotguestarray,get_value(concat(@plotaddress,'_guestarray'))),
+			assign(@plotguestarray,array())
+	)
+	if(
+		array_contains_ic(@plotguestarray,@guest),
+			return(concat('Player: ',@guest,' is already a guest!'))
+	)
+	array_push(@plotguestarray,@guest)
+	if(
+		equals_ic(@player,_jessassin_get_plot_owner(@plotaddress)),
+		store_value(concat(@plotaddress,'_guestarray'),@plotguestarray)
+		return(concat('Player: ',@guest,' added to guests!')),
+		return('You do not own this plot!')
+	)
+)
+
+#proc(_jessassin_plot_removemember,
+#
+#)
+
+#proc(_jessassin_plot_removeguest,
+#
+#)
+
+#proc(_jessassin_set_plot_members,@plotaddress,@memberarray,
+#	
+#)
+
+#proc(_jessassin_set_plot_guests,@plotaddress,@guestarray,
+#	
+#)
+
 proc(_jessassin_claimplot,@coords,@player,
+	#given plot coordinates and player, claims plot as player
+	#	returns on error: 
+	#		plot already owned
+	#		player too many plots
 	assign(@playerinfo,_jessassin_get_player_plotinfo(@player))
 	assign(@plotinfo,_jessassin_plotinfo(@coords))
 	#player vars
@@ -96,6 +163,10 @@ proc(_jessassin_claimplot,@coords,@player,
 )
 
 proc(_jessassin_unclaimplot,@coords,@player,
+	#given coordinates and player, unclaims plot as player
+	#	returns on error:
+	#		plot not owned by anyone
+	#		plot not owned by player running command
 	assign(@playerinfo,_jessassin_get_player_plotinfo(@player))
 	assign(@plotinfo,_jessassin_plotinfo(@coords))
 	#player vars
@@ -133,13 +204,11 @@ proc(_jessassin_unclaimplot,@coords,@player,
 	store_value(concat(@player,'_maxplotcount'),@newmaxplotcount)
 	store_value(concat(@player,'_plotarray'),@newownedplotarray)
 	store_value(concat(@plotaddress,'_owner'),'')
-)
-
-proc(_jessassin_plot_addmember,@coords,@member,@player,
-	
+	store_value(concat(@plotaddress,'_memberarray'),array())
 )
 
 proc(_jessassin_plot_address_coordinates,@address,
+	#given a plot address, returns coordinates that are inside that plot
 	assign(@split,reg_split('',@address))
 	array_remove(@split,0)
 	assign(@quad,@split[0])
@@ -149,6 +218,7 @@ proc(_jessassin_plot_address_coordinates,@address,
 )
 
 proc(_jessassin_map_location,@address,
+	#Given plot address, returns information relevant to the plot map
 	include('/includes/options.ms')
 	assign(@addresscoords,_jessassin_plot_address_coordinates(@address))
 	assign(@quadrant,@addresscoords[0])
@@ -181,6 +251,7 @@ proc(_jessassin_map_location,@address,
 )
 
 proc(_jessassin_plotcorners,@locationarray,
+	#Given a coordinate set, returns coordinates that corrospond to the corners of the plot
 	include('/includes/options.ms')
 	assign(@plotsize,@jessassinplotsize)
 	assign(@plotsize1,subtract(@plotsize,1))
@@ -244,6 +315,7 @@ proc(_jessassin_plotcorners,@locationarray,
 )
 
 proc(_jessassin_plotinfo,@coordinate,
+	#given a coordinate set, returns information about the corrosponding plot
 	assign(@quadrant,_jessassin_currentquadrant(@coordinate))
 	assign(@coord1,_jessassin_plotcorners(@coordinate)[5])
 	assign(@coord2,_jessassin_plotcorners(@coordinate)[6])
@@ -251,10 +323,12 @@ proc(_jessassin_plotinfo,@coordinate,
 	assign(@realaddress,_jessassin_format_plot_address(@address))
 	assign(@owner,_jessassin_get_plot_owner(@realaddress))
 	assign(@memberarray,_jessassin_get_plot_members(@realaddress))
-	return(array(@quadrant,@coord1,@coord2,@realaddress,@owner,@memberarray))
+	assign(@guestarray,_jessassin_get_plot_guests(@realaddress))
+	return(array(@quadrant,@coord1,@coord2,@realaddress,@owner,@memberarray,@guestarray))
 )
 
 proc(_jessassin_currentquadrant,@locarray,
+	#given a coordinate set, returns the quadrant that coordinate is in
 	assign(@x,@locarray[0])
 	assign(@z,@locarray[2])
 	if(and(not(lt(@x,0)),not(lt(@z,0))),assign(@quadrant,1))
@@ -266,6 +340,7 @@ proc(_jessassin_currentquadrant,@locarray,
 )
 
 proc(_jessassin_find_plot_address,@secondcornerlocarray,
+	#given the furthest coordinate from spawn within a plot, returns the address array of corrosponding plot
 	include('/includes/options.ms')
 	assign(@position,@secondcornerlocarray)
 	assign(@posx,@position[0])
@@ -301,6 +376,7 @@ proc(_jessassin_find_plot_address,@secondcornerlocarray,
 )
 
 proc(_jessassin_format_plot_address,@plotaddressarray,
+	#give a plot address array, returns formatted plot address
 	assign(@plot_addr_Q,@plotaddressarray[0])
 	assign(@plot_addr_X,@plotaddressarray[1])
 	assign(@plot_addr_Y,@plotaddressarray[2])
@@ -323,7 +399,6 @@ proc(_Jessassin_Generate_Plot,@locarray,@colorarray,
 	include('/includes/options.ms')
 	assign(@corner1,_jessassin_plotcorners(@locarray)[1])
 	assign(@corner2,_jessassin_plotcorners(@locarray)[3])
-#	run('//fast')
 	_jessassin_generate_plotchunks(@corner1,@corner2,@colorarray)
 	_jessassin_generate_plotborder(@corner1,@corner2)
 	if(
@@ -332,22 +407,18 @@ proc(_Jessassin_Generate_Plot,@locarray,@colorarray,
 	)
 	run('//sel')
 	run('/!')
-#	run('//fast')
 )
 
 proc(_jessassin_generate_plotchunks,@corner1,@corner2,@colorarray,
 	include('/includes/options.ms')
-#	msg('Generating Chunks')
 	assign(@timestostack,divide(@jessassinplotsize,16))
 	assign(@timestostack,subtract(@timestostack,1))
-#	msg('Stacking: ',@timestostack)
 	assign(@chunkcorner1,@corner1)
 	assign(@chunkcorner2,array(add(@corner1[0],15),@corner1[1],add(@corner1[2],15)))
 	_jessassin_load_chunkpattern(@chunkcorner1,@chunkcorner2,@colorarray)
 	run(concat('//stack ',@timestostack,' s'))
 	run(concat('//expand ',multiply(@timestostack,16),' s'))
 	run(concat('//stack ',@timestostack,' w'))
-#	msg('Done!')
 )
 
 proc(_jessassin_load_chunkpattern,@corner1,@corner2,@colorarray,
@@ -390,7 +461,6 @@ proc(_jessassin_load_chunkpattern,@corner1,@corner2,@colorarray,
 
 proc(_jessassin_generate_plotborder,@corner1,@corner2,
 	include('/includes/options.ms')
-#	msg('Generating Plot Border!')
 	assign(@corner1,array(@corner1[0],'1',@corner1[2]))
 	assign(@corner2,array(@corner2[0],'1',@corner2[2]))
 	sk_pos1(@corner1)
@@ -399,15 +469,11 @@ proc(_jessassin_generate_plotborder,@corner1,@corner2,
 	run(concat('//stack ',1,' u'))
 	run(concat('//stack ',2,' u'))
 	run(concat('//stack ',3,' u'))
-#	msg('Done!')
 )
 
 proc(_jessassin_generate_plotbedrock,@corner1,@corner2,
-#	msg('Generating bedrock!')
 	assign(@corner1,array(@corner1[0],'0',@corner1[2]))
 	assign(@corner2,array(@corner2[0],'0',@corner2[2]))
 	sk_pos1(@corner1)
 	sk_pos2(@corner2)
-#	run('//set 7')
-#	msg('Done!')
 )
