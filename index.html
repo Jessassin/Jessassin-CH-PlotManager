@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Jessassin-CH-PlotManager by Jessassin</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Jessassin-CH-PlotManager</h1>
+        <h2>A plot management snap-in for CommandHelper</h2>
+        <a href="https://github.com/Jessassin/Jessassin-CH-PlotManager" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1><strong>Jessassin's CommandHelper Plot Manager</strong></h1>
+
+<p>This is a simple plot management snap-in for CommandHelper. I hope that it will become a simple interface for worldguard, and a replacement for more advanced plot management plugins.</p>
+
+<hr><h3>It has (or will have) the following features:</h3>
+
+<ul>
+<li>generate a custom plot floor pattern</li>
+<li>allow players to claim/unclaim plots</li>
+<li>set the default number of plots a member can have</li>
+<li>allow members to allow certain players to build on their plot</li>
+<li>allow admins/mods to build on any plot</li>
+</ul><hr><h3>Dependancies:</h3>
+
+<ul>
+<li>
+<a href="http://dev.bukkit.org/server-mods/worldedit/">WorldEdit</a>(5.3+)</li>
+<li>
+<a href="http://dev.bukkit.org/server-mods/worldguard/">WorldGuard</a>(5.0+)</li>
+<li>
+<a href="https://github.com/Jessassin/Jessassin-CH-CommonMethods">Jessassin-CH-CommonMethods</a> (1.0.0+)</li>
+<li>Worldborder (looking at alternatives)</li>
+</ul><hr><h3>Commands:</h3>
+
+<ul>
+<li>/plot &lt;Action&gt; &lt;Arguments&gt;
+### Actions:
+
+<ul>
+<li>generate &lt;Block1,Block2,Block3,Block4&gt;</li>
+<li>claim &lt;Name of schematic to load&gt;</li>
+<li>unclaim &lt;Name of schematic to save&gt;</li>
+<li>info</li>
+<li>playerinfo</li>
+<li>Member &lt;add/remove&gt; &lt;player&gt;</li>
+<li>Guest &lt;add/remove&gt; &lt;player&gt;</li>
+<li>Lock &lt;on/off&gt; Plot lock prevents accidental /plot unclaim or /plot generate</li>
+<li>Mode &lt;Member/Guest/None&gt; Plot mode sets all players access lebel to plot</li>
+<li>Reserve &lt;user&gt; &lt;reason&gt; reserves plot for user, specify reason (32 char limit)</li>
+<li>Map &lt;plot&gt; Teleports you to the plot map, if plot is specified, teleports you to plot on map</li>
+<li>Warp &lt;plot&gt; Teleports you to center of plot specified</li>
+<li>Load &lt;Schematic Name&gt; Loads schematic onto current plot, replacing existing content</li>
+<li>Save &lt;Schematic Name&gt; Saves current plot to schematic</li>
+</ul>
+</li>
+</ul><hr><h3>Permissions:</h3>
+
+<ul>
+<li>ch.all OR commandhelper.all = Required for all commands</li>
+<li>Jessassin.plot.admin</li>
+<li>Jessassin.plot.command</li>
+<li>Jessassin.plot.claim</li>
+<li>Jessassin.plot.unclaim</li>
+<li>Jessassin.plot.generate</li>
+<li>Jessassin.plot.member</li>
+<li>Jessassin.plot.guest</li>
+<li>Jessassin.plot.lock</li>
+<li>Jessassin.plot.mode</li>
+<li>Jessassin.plot.reserve</li>
+<li>Jessassin.plot.map</li>
+<li>Jessassin.plot.warp</li>
+<li>Jessassin.plot.load</li>
+<li>Jessassin.plot.save</li>
+</ul><hr><h3>Persistance database:</h3>
+
+<ul>
+<li>player_plotcount,"Number of plots owned by player"</li>
+<li>player_maxplotcount,"Number of plots player can still claim"</li>
+<li>player_plotarray,array(plot1addr,plot2addr,plot3addr,etc.)</li>
+<li>player_mapmotto</li>
+<li>plotaddress_owner</li>
+<li>plotaddress_memberarray,array(member1,member2,member3)</li>
+<li>plotaddress_guestarray,array(guest1,guest2,guest3)</li>
+<li>plotaddress_plotmode</li>
+<li>plotaddress_plotlock (bool)</li>
+<li>plotaddress_plotreservedfor array(player,reason)</li>
+</ul><hr><h3>To do:</h3>
+
+<ul>
+<li>Remove redundant persistance value "player_plotcount" can use length(player_plotarray)</li>
+<li>Implement plot unclaiming</li>
+<li>implement member add/remove</li>
+<li>implement guest add/remove</li>
+<li>implement plot lock</li>
+<li>implement plot mode</li>
+<li>finish implementation of plot map</li>
+<li>Implement plot saving</li>
+<li>Implement plot loading</li>
+<li>add worldguard integration</li>
+<li>worldborder integration / replacement with other system</li>
+<li>improve speed of plot floor generation</li>
+<li>allow for more variables, like default number of plots</li>
+<li>add administrative commands</li>
+<li>reduce chat spam</li>
+<li>integrate pre-programmed code, that was removed for rewriting</li>
+<li>integrate "override everything" model
+
+<ul>
+<li>Allow all perameters to be overridden, including player,plot,location,etc.</li>
+<li>for example /plot claim 10101 someplayer (with plot.admin) claims 10101 as someplayer</li>
+</ul>
+</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/Jessassin/Jessassin-CH-PlotManager/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/Jessassin/Jessassin-CH-PlotManager/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/Jessassin/Jessassin-CH-PlotManager"></a> is maintained by <a href="https://github.com/Jessassin">Jessassin</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33788036-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
